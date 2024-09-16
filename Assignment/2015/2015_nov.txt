@@ -1,0 +1,215 @@
+1.display lines 1 to 5 from file x1.
+>sed -n '1,5p' x1
+
+2.Display three lines starting from 5th line of file Xl.
+> sed -n '5,7p' xl
+
+3.count a no of character in first line of file x1.
+>head -n 1 x1 | wc -c
+
+4.to count the no of word in line 40 through 60 of file f1. 
+>awk 'NR >= 40 && NR <= 60 { total += NF } END { print total }' f1
+
+5.to delete all special character from file f1.
+>sed 's/[^a-zA-Z0-9 ]//g' f1
+
+6. Display all line that start with 'let', from a file xl. The letters 1, e ort may be in any case.
+>grep -i '^let' xl
+
+1.Substitute `endif with 'fi' on line 10 of file XI.
+>sed -i '10s/endif/fi/' XI
+
+2. Display three lines starting from 5th line of file Xl.
+>sed -n '5,7p' Xl
+
+3. Display all line before string "Unix" from file XI.
+>sed '/Unix/q' XI
+
+4. Display all blank lines between line 10 and 20 of file XI.
+>sed -n '10,20{/^$/p}' XI
+
+5. Display lines beginning either with alphabet or digit from file XI.
+>grep '^[a-zA-Z0-9]' XI
+
+6. Display the lines that do not contain "Unix".
+>grep -v 'Unix' XI
+
+~Commands :
+~Shell scripts:
+
+1.Write a shell script to check the entered no is palindrome or not.
+read -p "Enter a number: " num 
+new=0 
+n=$num 
+while test $num -gt 0 
+do 
+    mod=`expr $num % 10`      
+    new=`expr $new \* 10 + $mod`  
+    num=`expr $num / 10`      
+done 
+echo "Reverse number is: " $new 
+if test $n -eq $new 
+then 
+        echo "The number is palindrome" 
+else 
+        echo "The number is not palindrome" 
+fi
+
+2.Write a shell script to test that the file is a readable file or not.
+# Check if a filename is provided as an argument
+if [ -z "$1" ]; then
+  echo "enter the filename in cmd_line: $0 "
+  exit 1
+fi
+# Check if the file is readable
+if [ -r "$1" ]; then
+  echo "The file '$1' is readable."
+else
+  echo "The file '$1' is not readable or does not exist."
+fi
+
+3) Write a menu driven shell script to perform following operations:
+I. Decimal to Binary
+2. Decimal to Octal
+3. Decimal to Hexadecimal.
+>while true
+do
+  echo "Choose an operation:"
+  echo "1. Decimal to Binary"
+  echo "2. Decimal to Octal"
+  echo "3. Decimal to Hexadecimal"
+  echo "4. Exit"
+  
+  echo "Enter your choice: " 
+  read choice
+  case $choice in
+    1) 
+      echo "Enter a decimal number: " 
+	read decimal
+      echo "obase=2; $decimal" | bc
+      ;;
+    2) 
+     echo  "Enter a decimal number: " 
+	read decimal
+      echo "obase=8; $decimal" | bc
+      ;;
+    3) 
+    echo  "Enter a decimal number: " 
+	read decimal
+      echo "obase=16; $decimal" | bc
+      ;;
+    4) 
+      echo "Exiting..."
+      exit 0
+      ;;
+    *) 
+      echo "Invalid choice. Please try again."
+      ;;
+  esac
+done
+
+4) Write a shell script that will pass filename and two integer numbers nl and n2. Display lines n1 to n2 from that file.
+>
+# Check if the correct number of arguments is provided
+if [ "$#" -ne 3 ]; then
+  echo "Usage: $0 <filename> <n1> <n2>"
+  exit 1
+fi
+filename=$1
+n1=$2
+n2=$3
+# Check if the file exists
+if [ ! -f "$filename" ]; then
+  echo "File '$filename' not found."
+  exit 1
+fi
+sed -n "${n1},${n2}p" "$filename"
+
+5) Write a shell script which display 5th line of all files of current directory that starts with vowels.
+>
+# Loop through all files in the current directory that start with a vowel
+for file in [aeiouAEIOU]*
+ do
+  # Check if it is a regular file
+  if [ -f "$file" ]; then
+    echo "File: $file"
+    # Display the 5th line of the file if it exists
+    sed -n '5p' "$file"
+    echo
+  fi
+done
+
+6) Write a shell script that pass a file name and pattern from command line and check whether that pattern occurs in the file or not. (check for appropriate validations)
+>
+# Check if the correct number of arguments is provided
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <filename> <pattern>"
+  exit 1
+fi
+
+filename=$1
+pattern=$2
+
+# Check if the file exists
+if [ ! -f "$filename" ]; then
+  echo "Error: File '$filename' does not exist."
+  exit 1
+fi
+
+# Check if the pattern is empty
+if [ -z "$pattern" ]; then
+  echo "Error: Pattern cannot be empty."
+  exit 1
+fi
+
+# Search for the pattern in the file
+if grep -q "$pattern" "$filename"; then
+  echo "Pattern '$pattern' found in file '$filename'."
+else
+  echo "Pattern '$pattern' not found in file '$filename'."
+fi
+
+7)Write a shell script which display file names of current directory if it is palindrome. Also provide report summary containing total number of lines, words and characters of those files.
+#!/bin/bash
+
+# Function to check if a string is a palindrome
+is_palindrome() {
+  local str="$1"
+  local reversed
+  reversed=$(echo "$str" | rev)
+  [ "$str" == "$reversed" ]
+}
+
+# Initialize counters for the report
+total_lines=0
+total_words=0
+total_chars=0
+
+# Loop through files in the current directory
+for file in *; do
+  # Check if it's a regular file and its name is a palindrome
+  if [ -f "$file" ] && is_palindrome "${file%.*}"; then
+    echo "Palindrome file: $file"
+    
+    # Get the line, word, and character counts
+    lines=$(wc -l < "$file")
+    words=$(wc -w < "$file")
+    chars=$(wc -m < "$file")
+    
+    echo "Lines: $lines"
+    echo "Words: $words"
+    echo "Characters: $chars"
+    echo
+
+    # Update the total counts
+    total_lines=$((total_lines + lines))
+    total_words=$((total_words + words))
+    total_chars=$((total_chars + chars))
+  fi
+done
+
+# Display the summary report
+echo "Report Summary:"
+echo "Total lines: $total_lines"
+echo "Total words: $total_words"
+echo "Total characters: $total_chars"

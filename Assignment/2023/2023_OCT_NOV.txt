@@ -1,0 +1,315 @@
+1 . To count number of words in line 10 though 20 of file test.txt.
+>sed -n '10,20p' test.txt | wc -w
+
+2.Display the lines which are not starting with 2 at the beginning.
+>grep -v '^2' file.txt
+
+3.Display lines of file fl having first and last character are same.
+>awk '/^(.).*\1$/' fl.txt
+\1-Refers back to the captured character (from the first group), ensuring that it matches the last character of the line.
+
+4.Remove repeated line from file test.txt.
+>sort test.txt|uniq -u
+
+5. Append dashed line after each line of file test.txt
+>awk '{ print; print "--------------------" }' test.txt
+
+6. Replace all occurrences of 'SYBCA' with 'TYBCA' on lines 5 to 10 of file fl.
+>sed -n '5,10s/SYBCS/TYBCA/' f1
+
+7.to delete all special characters from file test.txt
+>tr -d "[A-Za-z0-9]" < test.txt
+
+8.display all files in current directory where the first character is numeric and last character is not alphabet.
+>ls| grep "^[0-9].*[^a-z]"
+
+***awk***
+1. Print even numbers of words in each line of file test.txt
+awk -F "|" 'NF % 2 == 0' test.txt
+
+2.Display those words whose length is greater than 6 characters and consist of only alphabets.
+awk '{ for (i = 1; i <= NF; i++) if (length($i) > 6 && $i ~ /^[a-zA-Z]+$/) print $i }' filename.txt
+
+3. Print lines 6 to 12 from file test.txt
+awk 'NR >= 6 && NR <= 12' test.txt
+
+4.Count the all occurrence of pattern 'TYBCA' in file test.txt
+awk '{ count += gsub(/TYBCA/, "") } END { print count }' test.txt
+
+5.Display lines of file fl in uppercase.
+awk '{ print toupper($0) }' fl
+
+6. Display lines of file fl in reverse
+awk '{ lines[NR] = $0 } END { for (i = NR; i > 0; i--) print lines[i] }' fl
+
+
+Write a command using awk.
+1.To count number of occurrences of pattern 'hello' in file file.txt.
+>awk '{ count += gsub(/hello/, "") } END { print count }' file.txt
+
+2.To print even numbers of words in each line.
+>awk -F "|" 'NF % 2 == 0' filename
+
+3.To print 1 to 10 nos. using while, do while and for loop.
+>for loop:
+awk 'BEGIN { for (i = 1; i <= 10; i++) print i }'
+while loop:
+awk 'BEGIN { i = 1; while (i <= 10) { print i; i++ } }'
+do-while:
+awk 'BEGIN { i = 1; do { print i; i++ } while (i <= 10) }'
+ 
+
+
+~Shell Scripts..
+
+1. Write a shell script to enter 10 records in a file
+>
+# File to store the records
+output_file="records.txt"
+
+# Remove the file if it already exists
+rm -f "$output_file"
+
+echo "Please enter 10 records:"
+
+# Loop to read 10 records
+for i in {1..10}; do
+    echo -n "Enter record $i: "
+    read record
+    echo "$record" >> "$output_file"
+done
+
+echo "Records have been saved to $output_file."
+
+2.Write a shell script that computes the gross salary of a employee according to the following
+1. if basic salary is <30000 then HRA 15% of the basic and DA = 90% of the basic
+2. if basic salary is >30000 then HRA 500 and DA = 98% of the basic
+3. The basic salary is entered interactively through the key board
+>
+# Prompt the user to enter the basic salary
+echo -n "Enter the basic salary: "
+read basic_salary
+
+# Check if the input is a valid number
+if ! [[ "$basic_salary" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+    echo "Invalid input. Please enter a numeric value."
+    exit 1
+fi
+
+# Initialize HRA and DA variables
+if (( $(echo "$basic_salary < 30000" | bc -l) )); then
+    HRA=$(echo "scale=2; $basic_salary * 0.15" | bc)
+    DA=$(echo "scale=2; $basic_salary * 0.90" | bc)
+else
+    HRA=500
+    DA=$(echo "scale=2; $basic_salary * 0.98" | bc)
+fi
+
+# Calculate gross salary
+gross_salary=$(echo "scale=2; $basic_salary + $HRA + $DA" | bc)
+
+# Display the results
+echo "Basic Salary: $basic_salary"
+echo "HRA: $HRA"
+echo "DA: $DA"
+echo "Gross Salary: $gross_salary"
+
+3.Write a script to check whether a given string is palindrome or not.
+echo "Enter a String: "
+read right
+if test -n "$right"
+then
+  str=$right
+  len=`expr "$right" : ".*"`
+  i=1
+  rev=""
+  while test $i -le $len 
+  do 
+    last=`expr $str : '.*\(.\)$'`
+    rev=`echo "$rev$last"` 
+    str=`expr $str : '^\(.*\).'`
+    i=`expr $i + 1`
+  done 
+  if [ "$right" = "$rev" ]
+  then 
+    echo "The string is palindrome" 
+  else 
+    echo "The string is not palindrome" 
+  fi
+fi
+
+4. write a shell script to calculate the simpe interest .also calculate compound interest for given amount
+>
+# Function to calculate simple interest
+calculate_simple_interest() {
+    local principal=$1
+    local rate=$2
+    local time=$3
+
+    # Formula for simple interest: SI = (P * R * T) / 100
+    local simple_interest=$(echo "scale=2; ($principal * $rate * $time) / 100" | bc)
+    echo "$simple_interest"
+}
+
+# Function to calculate compound interest
+calculate_compound_interest() {
+    local principal=$1
+    local rate=$2
+    local time=$3
+    local n=$4  # Number of times interest is compounded per year
+
+    # Formula for compound interest: CI = P * (1 + R / (100 * N)) ^ (N * T) - P
+    local compound_interest=$(echo "scale=2; $principal * (1 + $rate / (100 * $n)) ^ ($n * $time) - $principal" | bc -l)
+    echo "$compound_interest"
+}
+
+# Prompt the user to enter the principal amount, rate, and time period
+echo -n "Enter the principal amount: "
+read principal
+
+echo -n "Enter the annual interest rate (in %): "
+read rate
+
+echo -n "Enter the time period (in years): "
+read time
+
+echo -n "Enter the number of times interest is compounded per year: "
+read n
+
+# Calculate simple interest
+simple_interest=$(calculate_simple_interest $principal $rate $time)
+echo "Simple Interest: $simple_interest"
+
+# Calculate compound interest
+compound_interest=$(calculate_compound_interest $principal $rate $time $n)
+echo "Compound Interest: $compound_interest"
+
+
+5.create a shell script to perform mathematical operations like add,sub,mul,div,square,and square-root using case statement
+>
+# Function to perform addition
+add() {
+    local a=$1
+    local b=$2
+    echo "scale=2; $a + $b" | bc
+}
+
+# Function to perform subtraction
+subtract() {
+    local a=$1
+    local b=$2
+    echo "scale=2; $a - $b" | bc
+}
+
+# Function to perform multiplication
+multiply() {
+    local a=$1
+    local b=$2
+    echo "scale=2; $a * $b" | bc
+}
+
+# Function to perform division
+divide() {
+    local a=$1
+    local b=$2
+    if [ "$b" -eq 0 ]; then
+        echo "Error: Division by zero is not allowed."
+    else
+        echo "scale=2; $a / $b" | bc
+    fi
+}
+
+# Function to calculate the square
+square() {
+    local a=$1
+    echo "scale=2; $a * $a" | bc
+}
+
+# Function to calculate the square root
+square_root() {
+    local a=$1
+    if [ "$a" -lt 0 ]; then
+        echo "Error: Cannot compute the square root of a negative number."
+    else
+        echo "scale=2; sqrt($a)" | bc -l
+    fi
+}
+
+# Display the menu
+echo "Select an operation:"
+echo "1. Add"
+echo "2. Subtract"
+echo "3. Multiply"
+echo "4. Divide"
+echo "5. Square"
+echo "6. Square Root"
+
+# Read the user's choice
+read -p "Enter your choice (1-6): " choice
+
+# Perform the chosen operation
+case $choice in
+    1)
+        echo -n "Enter two numbers: "
+        read num1 num2
+        result=$(add $num1 $num2)
+        echo "Result: $result"
+        ;;
+    2)
+        echo -n "Enter two numbers: "
+        read num1 num2
+        result=$(subtract $num1 $num2)
+        echo "Result: $result"
+        ;;
+    3)
+        echo -n "Enter two numbers: "
+        read num1 num2
+        result=$(multiply $num1 $num2)
+        echo "Result: $result"
+        ;;
+    4)
+        echo -n "Enter two numbers: "
+        read num1 num2
+        result=$(divide $num1 $num2)
+        echo "Result: $result"
+        ;;
+    5)
+        echo -n "Enter a number: "
+        read num
+        result=$(square $num)
+        echo "Result: $result"
+        ;;
+    6)
+        echo -n "Enter a number: "
+        read num
+        result=$(square_root $num)
+        echo "Result: $result"
+        ;;
+    *)
+        echo "Invalid choice."
+        ;;
+esac
+
+6.create two files al.txt and b1.txt .then compare both file using cmp command .also use command diff commands on these files and check the result.
+># Create and populate al.txt
+echo "This is the content of al.txt" > al.txt
+
+# Create and populate b1.txt
+echo "This is the content of b1.txt" > b1.txt
+Compare Files Using cmp:
+# Compare al.txt and b1.txt using cmp
+cmp al.txt b1.txt
+
+Compare Files Using diff
+# Compare al.txt and b1.txt using diff
+diff al.txt b1.txt
+
+$ cmp al.txt b1.txt
+al.txt b1.txt differ: byte 0, line 1
+
+$ diff al.txt b1.txt
+1c1
+< This is the content of al.txt
+---
+> This is the content of b1.txt
+

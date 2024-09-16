@@ -1,0 +1,136 @@
+shell Scripts-------------------
+1. Write a shell script to check whether entered file exists or not.
+
+# Prompt the user to enter the filename
+echo -n "Enter the filename to check: "
+read filename
+
+# Check if the file exists
+if [ -e "$filename" ]; then
+    echo "The file '$filename' exists."
+else
+    echo "The file '$filename' does not exist."
+fi
+
+2.Write a shell script to check whether entered file readable or not.
+# Prompt the user to enter the filename
+echo -n "Enter the filename to check: "
+read filename
+
+# Check if the file is readable
+if [ -r "$filename" ]; then
+    echo "The file '$filename' is readable."
+else
+    echo "The file '$filename' is not readable."
+fi
+
+3.Write a shell script to find a file with maximum size in the current directory, also print the no of words, characters, and lines along with the content of file.
+
+# Find the file with the maximum size in the current directory
+largest_file=$(ls -S | head -n 1)
+
+# Check if any file is found
+if [ -z "$largest_file" ]; then
+    echo "No files found in the current directory."
+    exit 1
+fi
+
+# Get file size, number of words, characters, and lines
+file_size=$(stat -c%s "$largest_file")
+word_count=$(wc -w < "$largest_file")
+char_count=$(wc -c < "$largest_file")
+line_count=$(wc -l < "$largest_file")
+
+# Print file details
+echo "File with the maximum size: $largest_file"
+echo "File size: $file_size bytes"
+echo "Number of words: $word_count"
+echo "Number of characters: $char_count"
+echo "Number of lines: $line_count"
+echo "Content of the file:"
+cat "$largest_file"
+
+4. Write a shell script which can be utilized as a calculator. The values can be entered using command line arguments.
+>
+# Check if the number of arguments is correct
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <number1> <operator> <number2>"
+    echo "Operator can be +, -, *, /"
+    exit 1
+fi
+
+# Assign command line arguments to variables
+num1=$1
+operator=$2
+num2=$3
+
+# Function to perform arithmetic operations
+calculate() {
+    case $operator in
+        +)
+            result=$(expr $num1 + $num2)
+            ;;
+        -)
+            result=$(expr $num1 - $num2)
+            ;;
+        \*)
+            result=$(expr $num1 \* $num2)
+            ;;
+        /)
+            if [ "$num2" -eq 0 ]; then
+                echo "Error: Division by zero is not allowed."
+                exit 1
+            fi
+            result=$(expr $num1 / $num2)
+            ;;
+        *)
+            echo "Error: Invalid operator. Use +, -, *, or /."
+            exit 1
+            ;;
+    esac
+    echo "Result: $result"
+}
+
+# Perform the calculation
+calculate
+
+5. Write a shell script that validate user id entered. If the user_id is not validated then display appropriate message else display welcome and user name.
+>
+#!/bin/bash
+
+# Prompt the user to enter their ID
+echo -n "Enter your user ID: "
+read user_id
+
+# Get the length of the user ID
+length=${#user_id}
+
+# Check if the length is between 6 and 12 characters
+if [ $length -lt 6 ] || [ $length -gt 12 ]; then
+    echo "Error: User ID must be between 6 and 12 characters long."
+    exit 1
+fi
+
+# Check if the user ID starts with a letter
+if ! [[ $user_id =~ ^[a-zA-Z] ]]; then
+    echo "Error: User ID must start with a letter."
+    exit 1
+fi
+
+# Check if the user ID contains only alphanumeric characters
+if ! [[ $user_id =~ ^[a-zA-Z0-9]+$ ]]; then
+    echo "Error: User ID can only contain alphanumeric characters."
+    exit 1
+fi
+
+# If all checks pass, display a welcome message
+echo "Welcome, $user_id!"
+
+
+
+
+
+
+
+
+

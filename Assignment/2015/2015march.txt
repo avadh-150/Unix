@@ -1,0 +1,135 @@
+1.display all files in current directory where the first character is numeric and last character is not alphabet.
+>ls| grep "^[0-9].*[^a-z]"
+
+2.to counmt number of words in line 40 thought 60 of file f1.txt
+> sed -n '40,60p' f1.txt | wc -w
+
+3.to list name consist of only 4 digits.
+>ls | grep -E '^[0-9]{4}$'
+
+4. to display the line beginning with alphabet of file x1.
+> grep '^[a-zA-Z]' x1
+
+5. display the all blank link between 20 and 30 of the file x1.
+>  sed -n '20,30p' x1 | sed -n '/^[[:space:]]*$/p'
+
+6. display the line beginning either with alphabet or digit from file x1.
+> grep '^[a-zA-Z0-9]' x1
+
+7. display the line that do not contain UNIX.
+> 7. display the line that do not contain UNIX.
+
+8. display the number of occurrence of the pattern "director"
+> grep -c 'director' x1
+
+9. display line having exactly 50 characters of file x1.
+> grep -E '^.{50}$' x1
+
+10. write a command to append dash line after each line of file x1.
+> sed 'G; s/\n/\n------------------------------\n/' x1
+> grep '.' x1 | sed 's/$/\n------------------------------/'
+
+
+* write a command using awk
+
+1. print even number line in the data file.
+> awk 'NR % 2 == 0' data
+
+2. print the sums of the fields of every line in a file f1.
+> awk '{sum=0; for (i=1; i<=NF; i++) sum += $i; print sum}' f1
+
+3. display those words whose length greater then 10 character and consist of digit only.
+> awk '{for (i=1; i<=NF; i++) if (length($i) > 10 && $i ~ /^[0-9]+$/) print $i}'
+f1
+
+
+4. write a awk script to print 10 to 1 using while loop. 
+> awk 'BEGIN {
+    i = 10
+    while (i >= 1) {
+        print i
+        i--
+    }
+}'
+
+5. print line number 18 to 30 from file f1.txt
+> awk 'NR >= 18 && NR <= 30' f1.txt
+
+6. count the total number of line in the file.
+> awk 'END {print NR}' filename
+
+7. count occurrence of pattern UNIX operating system in file f1.
+> awk '{count += gsub(/UNIX operating system/, "")} END {print count}' f1
+
+8. print the last field of last line.
+> awk ' END {print $NF}' f1
+
+~Shell Scripts :
+
+1.Write a shell script to count files, directories and symbolic link files from current directory.
+# Count files 
+file_count=`ls -l | grep ^- | wc -l`
+
+# Count directories
+dir_count=`ls -l | grep ^d | wc -l`
+
+# Count symbolic links
+symlink_count=`ls -l | grep ^l | wc -l`
+echo "Files: $file_count"
+echo "Directories: $dir_count"
+echo "Symbolic Links: $symlink_count"
+
+2. Write a script that accepts a string followed by one or more file name(s) from command line and display number of words and number of lines that consists of given string in each file.
+#!/bin/bash
+
+# Check if at least two arguments are provided (a string and at least one file)
+if [ "$#" -lt 2 ]; then
+  echo "Usage: $0 <string> <file1> [file2 ...]"
+  exit 1
+fi
+
+# The first argument is the search string
+search_string=$1
+shift # Shift arguments to get filenames only
+
+# Loop through all provided files
+#The search string is stored in search_string, and shift is used to remove it from the arguments list, leaving only filenames in $@.
+for file in "$@"; do
+
+  # Check if the file exists
+#The script loops through each provided filename and checks if the file exists (-f).
+  if [ ! -f "$file" ]; then
+    echo "File '$file' not found."
+    continue
+  fi
+
+  # Count lines containing the search string
+  line_count=`grep -c "$search_string" "$file"`
+
+  # Count words containing the search string
+  word_count=`grep -o "$search_string" "$file" | wc -l`
+
+  # Output results
+  echo "File: $file"
+  echo "Lines containing '$search_string': $line_count"
+  echo "Occurrences of '$search_string': $word_count"
+  echo
+done
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

@@ -1,0 +1,64 @@
+(1) Display line starting from 10th line to the end of file X1.
+> sed -n '10,$p' X1
+
+(2) Display all files in current directory where the first character is numeric and the last character is not alphabetic.
+> Is | grep -i ^[0-9]."[^a-z]$
+
+(3) Display the contents of last modified file.
+>cat "$(ls -t | head -n 1)"
+
+
+(4) To display contents of top 3 largest files in a working directory.
+#Passes these file names to cat to display their contents
+>ls -S | head -n 3 | xargs cat
+
+
+(5) To display all files of current directory whose 1st Character is not digit.
+> Is | grep ^[a-z].*
+
+(6) To display inode number of all files of current directory.
+>ls -i
+
+
+
+(7) Display all files which have read and write permission for the group.
+>ls -l | grep '^-.*rw-rw'
+
+(8) Find out the number of the character '?' occur in a file fl.txt
+>grep -o '?' fl.txt | wc -l
+
+(9) Count number of words in line 40 thought 60 of file fl .txt.
+>sed -n '40,60p' fl.txt | wc -w
+
+(10) To delete all vowels from the file xl.txt.
+>sed -i.bak 's/[aeiouAEIOU]//g' xl.txt
+
+(11) Replace the word unix with UNIX in between 5th to 10th line including both
+>sed '5,10s/unix/UNIX/g' file.txt > file_modified.txt
+
+
+AWK Commands 
+(1) Display those words whose length greater than 10 characters and consist of alphabet only.
+>awk '
+{
+    for (i = 1; i <= NF; i++) {
+        if (length($i) > 10 && $i ~ /^[a-zA-Z]+$/) {
+            print $i
+        }
+    }
+}
+' input_file
+
+(2) Print odd numbers of words in each line
+awk '
+{
+    for (i = 1; i <= NF; i++) {
+        if (i % 2 == 1) {  # Check if the position is odd
+            print $i
+        }
+    }
+}
+' input_file
+
+(3) Count occurrences of pattern 'Operating System' in file fl.
+awk '{ count += gsub(/Operating System/, "") } END { print count }' fl

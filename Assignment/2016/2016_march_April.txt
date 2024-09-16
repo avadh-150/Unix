@@ -1,0 +1,17 @@
+1.To remove duplicate line from file x1.
+>sort -u x1
+
+2. Count number of character in first three lines of file x1.
+> head -3 x1 | wc -c
+
+3. Display files of current directory whose first character is not digit. 
+>Is | grep '^[a-z]'
+
+4. Remove a file forcibly which do not have write permission. 
+>chmod g-w file | rm -f file
+
+5. To delete all special characters from the files xl.
+>sed 's/[^A-Za-z0-9]//g' x1
+
+6. To display number of processes.
+>ps

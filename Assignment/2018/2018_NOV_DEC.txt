@@ -1,0 +1,155 @@
+1.Replaces all occurrence of SYBCA with TYBCA in 8th line of file studlist
+>sed -i '8s/SYBCA/TYBCA/g' studlist
+
+2.Counts all occurrence of ‘SYBCA’ in the file studlist.
+> grep -c 'SYBCA' studlist | wc -l
+
+3.To count number of character in last line of file studlist
+>tail -n 1 studlist | wc -c
+
+4.Display the processes of user ‘TYBCA101’.
+=> ps -u TYBCA101
+
+5.Count number of character in first five lines of file studlist.
+=> head -n 5 studlist | wc -m
+ 
+6.Display file of directory whose first character is not digit.
+=> ls | grep -v '^[0-9]'
+
+~ Commands on file studlst:
+
+1.write a command to find the 'Operating system' ignoring case
+> grep -i "Operating system" studlst
+
+2.write a command to display occurrence of string 'Unix'
+>grep -i 'Unix' studlst
+
+3.write a command to display line which start with 'The'
+>grep -i ^'The' studlst
+
+4. write a command to display line which end with 'India'
+>grep -i "India$" studlst
+
+5.write a command to print first three line of file
+>head -n 3 studlst
+
+~ Write command using awk:
+1. print odd number of word in each line.
+>awk -F "|" 'NF % 2 == 1' filename
+
+2.Count occurrences of pattern ‘UNIX’ in file f1.txt.
+=> awk '{count += gsub(/UNIX/, "")} END {print count}' f1.txt
+
+3.Display those words whose length is greater than 5 characters and consist of digits only.
+=> awk '{for (i=1; i<=NF; i++) if (length($i) > 5 && $i ~ /^[0-9]+$/) print $i}' filename
+
+*Practical_paper*------------------------------------------------------------
+~Write grep command for the following:
+
+(a) Display lines that have a 5 letter string that starts with "T' and ends with 'e'?
+>grep -E '\bT[a-zA-Z]{3}e\b' filename
+
+(b) Display lines that have numbers only ?
+>grep -E '^[0-9]+$' filename
+
+(c) Display lines that start with the character a ?
+>grep -i ^a filename
+
+~ Write awk commands for the following:
+
+(a) Print the squares of first numbers from 1 to 5.
+>awk 'BEGIN { for (i = 1; i <= 5; i++) print i^2 }'
+
+(b) Print 1 to 10 nos.
+>awk 'BEGIN { for (i = 1; i <= 10; i++) print i }'
+
+(c) Collect each line in a separate array element, index it by line number and print them in reverse order.
+>awk '{ lines[NR] = $0 } END { for (i = NR; i >= 1; i--) print lines[i] }' filename
+
+~Shell Scripts:
+
+1)Write a shell script to validate the name of a person accepted through the keyboard so that it does not exceed 10 chars of length.
+>echo "Enter the Name:"
+	read name
+	len=`expr "$name":".*"`
+	if test len -le 10
+	then
+	echo "Valid name: $name"
+	else
+  	echo "Error: The name exceeds 10 characters."
+	fi
+	
+2) Write a shell script to check whether your current working directory is same as home directory or not.
+>current_dir=$(pwd)
+home_dir=$HOME
+if test "$current_dir" = "$home_dir" 
+ then
+  echo "You are in your home directory."
+else
+  echo "You are not in your home directory."
+fi
+
+
+3) Write a script to check whether a given string is palindrome or not.
+echo "Enter a String: "
+read right
+if test -n "$right"
+then
+  str=$right
+  len=`expr "$right" : ".*"`
+  i=1
+  rev=""
+  while test $i -le $len 
+  do 
+    last=`expr $str : '.*\(.\)$'`
+    rev=`echo "$rev$last"` 
+    str=`expr $str : '^\(.*\).'`
+    i=`expr $i + 1`
+  done 
+  if [ "$right" = "$rev" ]
+  then 
+    echo "The string is palindrome" 
+  else 
+    echo "The string is not palindrome" 
+  fi
+fi
+
+4) Write a shell script to display the calendar for current month with current date replaced by *or** depending on whether the date has one digit or two.
+>
+
+# Get the current month and year
+month=$(date +%m)
+year=$(date +%Y)
+# Get the current day of the month
+day=$(date +%d)
+# Create a calendar for the current month
+cal -m $month $year | awk -v day=$day '
+{
+  if ($1 == day) {
+    if (length($1) == 1) {
+      $1 = "*"
+    } else {
+      $1 = "**"
+    }
+  }
+  print $0
+}
+'
+
+5) Write a script to check whether a given number is palindrome or not.
+read -p "Enter a number: " num 
+new=0 
+n=$num 
+while test $num -gt 0 
+do 
+    mod=`expr $num % 10`      
+    new=`expr $new \* 10 + $mod`  
+    num=`expr $num / 10`      
+done 
+echo "Reverse number is: " $new 
+if test $n -eq $new 
+then 
+        echo "The number is palindrome" 
+else 
+        echo "The number is not palindrome" 
+fi

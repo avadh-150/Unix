@@ -1,0 +1,132 @@
+
+
+~command______________________________________
+a)Link three files
+>ln file1 link1
+ln file2 link2
+ln file3 link3
+
+(b) List attributes of the current directory
+>ls -ld .
+
+(c) To print the files in the current directory and one level down to the current directory.
+>find . -maxdepth 2 -type f
+
+(d) Display inodes of all files of current directory.
+>ls -i
+
+(e) To locate all the lines where 1st and last characters are same.
+>awk 'substr($0,1,1) == substr($0,length($0),1)' filename
+
+a) Display lines that have a 5 letter string that starts with 'T' and ends with 'e'.
+>grep -E '\bT[a-zA-Z]{3}e\b' filename
+
+b) Display lines that have numbers only.
+>grep '^[0-9 ]*$' filename
+
+c) Display lines that start with the character a.
+>grep '^a' filename
+
+
+
+
+~_____________Shell Scripts-_____________________________________________
+
+A) Write a script to count the number of the vowels in the entered string.
+# Read the string from the user
+echo "Enter a string: "
+read input
+
+# Convert the string to lowercase to make counting case-insensitive
+input=$(echo "$input" | tr '[:upper:]' '[:lower:]')
+
+# Count the number of vowels
+vowel_count=$(echo "$input" | grep -o -i '[aeiou]' | wc -l)
+
+# Display the count of vowels
+echo "Number of vowels: $vowel_count"
+
+
+
+(B) Write a menu driven script to convert the content of file in to uppercase or lowercase based on the users choice.
+
+# Display the menu
+echo "Select an option:"
+echo "1. Convert file content to uppercase"
+echo "2. Convert file content to lowercase"
+echo "3. Exit"
+
+# Read user choice
+read -p "Enter your choice (1, 2, or 3): " choice
+
+# Read the file name
+read -p "Enter the filename: " filename
+
+case $choice in
+    1)
+        tr '[:lower:]' '[:upper:]' < "$filename" > "${filename}.uppercase"
+        echo "File converted to uppercase and saved as ${filename}.uppercase"
+        ;;
+    2)
+        tr '[:upper:]' '[:lower:]' < "$filename" > "${filename}.lowercase"
+        echo "File converted to lowercase and saved as ${filename}.lowercase"
+        ;;
+    3)
+        echo "Exiting..."
+        ;;
+    *)
+        echo "Invalid choice. Please select 1, 2, or 3."
+        ;;
+esac
+
+
+A) Write a shell script to check the file is directory or a file. The filename is entered at the command prompt as an argument.
+>
+# Check if an argument is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 <filename>"
+  exit 1
+fi
+
+# Get the filename from the command-line argument
+filename="$1"
+
+# Check if it's a directory
+if [ -d "$filename" ]; then
+  echo "$filename is a directory."
+# Check if it's a regular file
+elif [ -f "$filename" ]; then
+  echo "$filename is a file."
+else
+  echo "$filename does not exist."
+fi
+
+
+(B) Write a script to reverse string. The string should be passed as an argument.
+# Check if an argument is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 <string>"
+  exit 1
+fi
+
+# Get the string from the command-line argument
+input="$1"
+
+# Reverse the string
+reversed=$(echo "$input" | rev)
+
+# Display the reversed string
+echo "Reversed string: $reversed"
+
+3.write a shell script to display content of all the regular files of current directory.
+>
+# Loop through all files in the current directory
+for file in *
+ do
+  # Check if it is a regular file
+  if [ -f "$file" ]; then
+    echo "Contents of $file:"
+    cat "$file"  # Display the content of the file
+    echo ""      # Print a blank line for readability
+  fi
+done

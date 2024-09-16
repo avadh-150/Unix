@@ -1,0 +1,62 @@
+~commands: 
+
+1]	To count number of words in line 10 to 20 of file f1.txt.
+=> sed -n '10,20p' f1.txt | wc -w
+
+2]	To add .5 in the marks field of student.tct file (eg. 30 should be replaced by 30.5).
+=> sed -i 's/\b[0-9]\{1,\}\b/&.5/g' student.txt
+
+3]	Write a command to replace first occurrence of ‘Delhi’ with ‘Mumbai’ in each line of dept.lst.
+=> sed 's/Delhi/Mumbai/' dept.lst
+
+4.replace the word unix UNIX in whole file.
+>sed -i 's/unix/UNIX/g' filename
+
+5.display line 10 to 15 from file f1.txt
+>sed -n '10,15p' f1.txt
+
+(B) Answer the following using awk 
+
+(1) Print all user login names available in /etc/ passwd.
+>awk -F: '{ print $1 }' /etc/passwd
+
+(2) Print the fields 2, 3, 4, and 6 from student.txt file which contains the pattern 'TYBCA'.
+>awk '/TYBCA/ { print $2, $3, $4, $6 }' student.txt
+
+(3) Prints all lines containing string "for" in test.txt file.
+>awk '/for/' test.txt
+
+
+~Shell Scripts:
+
+1. Write a shell script to validate the name of a person accepted through the keyboard so that it does not exceed 8 chars of length.
+>
+# Prompt the user to enter a name
+echo -n "Enter the name (up to 8 characters): "
+read name
+
+# Check the length of the name
+if [ ${#name} -le 8 ]; then
+    echo "Name accepted: $name"
+else
+    echo "Error: Name exceeds 8 characters."
+fi
+
+2. Write a shell script to check whether the given file is empty or not.
+>
+# Prompt the user to enter the filename
+echo -n "Enter the filename to check: "
+read filename
+
+# Check if the file exists
+if [ ! -e "$filename" ]; then
+    echo "Error: File does not exist."
+    exit 1
+fi
+
+# Check if the file is empty
+if [ ! -s "$filename" ]; then
+    echo "The file '$filename' is empty."
+else
+    echo "The file '$filename' is not empty."
+fi

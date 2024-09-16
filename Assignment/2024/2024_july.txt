@@ -1,0 +1,52 @@
+~commands:-----------------------
+
+
+
+
+
+
+1)Display last line of file fl.
+>tail -n 1 fl
+
+2) Replace all occurrences he' with 'she' and 'her' with 'his' in file fl
+>sed -e "s/he/she/g" -e "s/her/his/g" fl
+
+3) Convert file content of fl into upper case.
+>tr '[:lower:]' '[:upper:]' < fl
+
+4) Display only the count of duplicate words in file fl
+>tr '[:space:]' '\n' < fl | sort | uniq -d | wc -l
+
+5)Display files of current directory that contains 'unix in it.
+>ls *unix*
+
+6) Insert blank line after each line in file fl except last line.
+>awk '{ print; print "" }' fl | sed '$d'
+
+7) Display length of longest line of file fl.
+>awk '{ if (length > max) max = length } END { print max }' fl
+
+8) Convert decimal number 1234 into hexadecimal.
+>echo "obase=16; 1234" | bc
+
+
+B) Write a command using awk utility. 
+1) Display longest word in each line of file fl.
+>awk '{ longest=""; for (i=1; i<=NF; i++) if (length($i) > length(longest)) longest=$i; print longest }' fl
+
+2) Display number of words in each line of tale fl without using NF. file
+>awk '{ count=0; while ($count != "") { count++; } print count - 1 }' fl
+
+3) Display lines of file fl which consist of only alphabets.
+>awk '/^[a-zA-Z]+$/' fl
+
+4) Display lines 5 to 10 of file not that do unix
+unix'.
+>awk 'NR>=5 && NR<=10 && !/unix/' fl
+
+5) Display cash line of filefl reverse.
+>awk '{ for (i=NF; i>0; i--) printf "%s ", $i; printf "\n" }' fl
+
+
+
+
